@@ -28,12 +28,73 @@ class Event(db.Model):
         nullable=True,
     )
 
+    # Event location
+    venue = db.Column(
+        db.String(150),
+        nullable=False,
+    )
+
+    address = db.Column(
+        db.String(255),
+        nullable=True,
+    )
+
+    city = db.Column(
+        db.String(100),
+        nullable=True,
+    )
+
+    country = db.Column(
+        db.String(100),
+        nullable=True,
+        default="Kenya",
+    )
+
+    # Event schedule
+    starts_at = db.Column(
+        db.DateTime(timezone=True),
+        nullable=False,
+    )
+
+    ends_at = db.Column(
+        db.DateTime(timezone=True),
+        nullable=False,
+    )
+
+    # Event access
+    access_code = db.Column(
+        db.String(20),
+        unique=True,
+        nullable=False,
+        index=True,
+    )
+
+    # Event lifecycle
     status = db.Column(
         db.String(50),
         nullable=False,
         default="DRAFT",
     )
 
+    registration_status = db.Column(
+        db.String(50),
+        nullable=False,
+        default="CLOSED",
+    )
+
+    moderator_voting_status = db.Column(
+        db.String(50),
+        nullable=False,
+        default="NOT_STARTED",
+    )
+
+    voting_status = db.Column(
+        db.String(50),
+        nullable=False,
+        default="NOT_STARTED",
+    )
+
+    # Ownership
     created_by = db.Column(
         db.Integer,
         db.ForeignKey("users.id"),

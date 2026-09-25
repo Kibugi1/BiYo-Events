@@ -6,10 +6,7 @@ from ..extensions import db
 class EventMembership(db.Model):
     __tablename__ = "event_memberships"
 
-    id = db.Column(
-        db.Integer,
-        primary_key=True,
-    )
+    id = db.Column(db.Integer, primary_key=True)
 
     event_id = db.Column(
         db.Integer,
@@ -29,10 +26,22 @@ class EventMembership(db.Model):
         default="PARTICIPANT",
     )
 
+    team_role = db.Column(
+        db.String(50),
+        nullable=False,
+        default="MEMBER",
+    )
+
     joined_at = db.Column(
         db.DateTime(timezone=True),
         default=lambda: datetime.now(timezone.utc),
         nullable=False,
+    )
+
+    group_id = db.Column(
+        db.Integer,
+        db.ForeignKey("event_groups.id"),
+        nullable=True,
     )
 
     event = db.relationship(
@@ -43,6 +52,11 @@ class EventMembership(db.Model):
     user = db.relationship(
         "User",
         backref="event_memberships",
+    )
+
+    group = db.relationship(
+        "EventGroup",
+        backref="memberships",
     )
 
     __table_args__ = (
@@ -58,5 +72,6 @@ class EventMembership(db.Model):
             f"<EventMembership "
             f"event={self.event_id} "
             f"user={self.user_id} "
-            f"role={self.role}>"
+            f"role={self.role} "
+            f"team_role={self.team_role}>"
         )
